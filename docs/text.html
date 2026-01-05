@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Générateur ASCII Art - Convertissez du texte en bannières ASCII stylisées">
+    <title>🎨 ASCII Art Generator - Texte vers ASCII</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>🎨 ASCII ART GENERATOR</h1>
+        <p>Transformez votre texte en bannières ASCII</p>
+    </header>
+
+    <nav>
+        <a href="index.html">Image → ASCII</a>
+        <a href="text.html" class="active">Texte → ASCII</a>
+        <a href="gallery.html">Galerie</a>
+        <a href="https://github.com/Augustino127/customised-ascii-art-generator" target="_blank">GitHub</a>
+    </nav>
+
+    <div class="container">
+        <!-- Section Input -->
+        <div class="card">
+            <h2 class="card-title">✏️ Votre texte</h2>
+
+            <div class="form-group">
+                <label for="textInput">Texte à convertir (max 100 caractères):</label>
+                <input type="text" id="textInput" placeholder="Entrez votre texte..." maxlength="100">
+            </div>
+
+            <div id="errorMessage" class="error-message"></div>
+            <div id="successMessage" class="success-message"></div>
+        </div>
+
+        <!-- Options -->
+        <div class="card">
+            <h2 class="card-title">⚙️ Options</h2>
+
+            <div class="form-group">
+                <label for="font">Police:</label>
+                <select id="font">
+                    <option value="standard">Standard</option>
+                    <option value="banner">Banner</option>
+                    <option value="big">Big</option>
+                    <option value="block">Block</option>
+                    <option value="bubble">Bubble</option>
+                    <option value="digital">Digital</option>
+                    <option value="slant">Slant</option>
+                    <option value="3-d">3D</option>
+                </select>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="banner">
+                <label for="banner">Créer une bannière avec bordures</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="gradient">
+                <label for="gradient">Appliquer un gradient de couleurs</label>
+            </div>
+
+            <div class="checkbox-group">
+                <input type="checkbox" id="shadow">
+                <label for="shadow">Ajouter une ombre</label>
+            </div>
+
+            <div class="btn-group">
+                <button id="convertBtn" class="btn btn-primary">
+                    🚀 Générer l'ASCII Art
+                </button>
+            </div>
+        </div>
+
+        <!-- Loader -->
+        <div id="loader" class="loader">
+            <div class="spinner"></div>
+            <p>Génération en cours...</p>
+        </div>
+
+        <!-- Résultat -->
+        <div class="card">
+            <h2 class="card-title">✨ Résultat</h2>
+
+            <div class="preview-container" id="asciiOutput">
+Votre ASCII art apparaîtra ici...
+            </div>
+
+            <div class="btn-group">
+                <button id="downloadBtn" class="btn btn-secondary" disabled>
+                    💾 Télécharger (.txt)
+                </button>
+                <button id="copyBtn" class="btn btn-secondary" disabled>
+                    📋 Copier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>
+            Made with ❤️ by ASCII Art Generator Team |
+            <a href="https://github.com/Augustino127/customised-ascii-art-generator">View on GitHub</a>
+        </p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/api-client.js"></script>
+    <script>
+        // Text converter logic
+        class TextConverter {
+            constructor() {
+                this.setupEventListeners();
+                this.loadFonts();
+            }
+
+            setupEventListeners() {
+                document.getElementById('convertBtn').addEventListener('click', () => this.convert());
+                document.getElementById('downloadBtn').addEventListener('click', () => this.download());
+                document.getElementById('copyBtn').addEventListener('click', () => this.copy());
+
+                // Auto-convert on input (debounced)
+                let timeout;
+                document.getElementById('textInput').addEventListener('input', () => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        if (document.getElementById('textInput').value.trim()) {
+                            this.convert();
+                        }
+                    }, 500);
+                });
+            }
+
+            async loadFonts() {
+                try {
+                    const fonts = await window.asciiAPI.getFonts();
+                    const fontSelect = document.getElementById('font');
+                    if (fonts.length > 0) {
+                        fontSelect.innerHTML = fonts.slice(0, 20).map(f =>
+                            `<option value="${f}">${f}</option>`
+                        ).join('');
+                    }
+                } catch (error) {
+                    console.error('Error loading fonts:', error);
+                }
+            }
+
+            async convert() {
+                const text = document.getElementById('textInput').value.trim();
+
+                if (!text) {
+                    this.showError('Veuillez entrer du texte');
+                    return;
+                }
+
+                const options = {
+                    font: document.getElementById('font').value,
+                    banner: document.getElementById('banner').checked,
+                    gradient: document.getElementById('gradient').checked,
+                    shadow: document.getElementById('shadow').checked
+                };
+
+                this.showLoader();
+                this.hideError();
+
+                try {
+                    const result = await window.asciiAPI.convertText(text, options);
+
+                    if (result.success) {
+                        document.getElementById('asciiOutput').textContent = result.ascii_art;
+                        document.getElementById('downloadBtn').disabled = false;
+                        document.getElementById('copyBtn').disabled = false;
+                        this.showSuccess('Texte converti avec succès !');
+                    }
+                } catch (error) {
+                    this.showError(error.message || 'Erreur lors de la conversion');
+                } finally {
+                    this.hideLoader();
+                }
+            }
+
+            download() {
+                const output = document.getElementById('asciiOutput').textContent;
+                const blob = new Blob([output], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'ascii-text.txt';
+                a.click();
+                URL.revokeObjectURL(url);
+            }
+
+            copy() {
+                const output = document.getElementById('asciiOutput').textContent;
+                navigator.clipboard.writeText(output).then(() => {
+                    this.showSuccess('Copié dans le presse-papiers !');
+                });
+            }
+
+            showLoader() {
+                document.getElementById('loader').classList.add('active');
+            }
+
+            hideLoader() {
+                document.getElementById('loader').classList.remove('active');
+            }
+
+            showError(message) {
+                const errorDiv = document.getElementById('errorMessage');
+                errorDiv.textContent = message;
+                errorDiv.classList.add('show');
+            }
+
+            hideError() {
+                document.getElementById('errorMessage').classList.remove('show');
+            }
+
+            showSuccess(message) {
+                const successDiv = document.getElementById('successMessage');
+                successDiv.textContent = message;
+                successDiv.classList.add('show');
+                setTimeout(() => successDiv.classList.remove('show'), 3000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new TextConverter();
+        });
+    </script>
+</body>
+</html>
