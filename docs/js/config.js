@@ -2,9 +2,8 @@
  * Configuration de l'API
  */
 
-// URL de l'API (à modifier après déploiement sur Render)
-const API_URL = 'http://localhost:5000';  // Development
-// const API_URL = 'https://ascii-art-api.onrender.com';  // Production
+// URL de l'API - METTEZ VOTRE URL RENDER ICI !
+const API_URL = 'https://VOTRE-URL-RENDER.onrender.com';  // ← Changez ici !
 
 // Export pour utilisation dans d'autres fichiers
 window.API_CONFIG = {
