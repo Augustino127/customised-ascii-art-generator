@@ -1,0 +1,15 @@
+# Core Flask
+Flask>=3.0.0
+flask-cors>=4.0.0
+gunicorn>=21.2.0
+
+# ASCII Generator dependencies
+Pillow>=10.0.0
+numpy>=1.24.0
+opencv-python-headless>=4.8.0
+pyfiglet>=0.8.0
+art>=6.0
+imageio>=2.31.0
+scipy>=1.11.0
+scikit-image>=0.21.0
+svgwrite>=1.4.3
