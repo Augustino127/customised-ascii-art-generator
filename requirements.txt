@@ -1,0 +1,32 @@
+# Core dependencies
+Pillow>=10.0.0
+numpy>=1.24.0
+opencv-python>=4.8.0
+
+# CLI & UI
+rich>=13.0.0
+click>=8.1.0
+prompt-toolkit>=3.0.0
+
+# Text rendering
+pyfiglet>=0.8.0
+art>=6.0
+
+# Animation & Video
+imageio>=2.31.0
+imageio-ffmpeg>=0.4.9
+
+# Advanced effects
+scipy>=1.11.0
+scikit-image>=0.21.0
+
+# Export formats
+html2text>=2020.1.16
+svgwrite>=1.4.3
+
+# Color handling
+colorama>=0.4.6
+termcolor>=2.3.0
+
+# AI & Detection (optional)
+# opencv-contrib-python>=4.8.0
