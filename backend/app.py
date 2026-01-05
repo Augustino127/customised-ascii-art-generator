@@ -25,9 +25,11 @@ CORS(app, resources={
 # Enregistrement des blueprints
 from api.routes.image import image_bp
 from api.routes.text import text_bp
+from api.routes.info import info_bp
 
 app.register_blueprint(image_bp, url_prefix='/api')
 app.register_blueprint(text_bp, url_prefix='/api')
+app.register_blueprint(info_bp, url_prefix='/api')
 
 
 @app.route('/')
