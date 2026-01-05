@@ -2,6 +2,22 @@
 
 Un générateur ASCII art **ultra-complet** avec fonctionnalités avancées et innovations uniques.
 
+## 🌐 Application Web
+
+**✨ Utilisez le générateur en ligne :** [augustino127.github.io/customised-ascii-art-generator](https://augustino127.github.io/customised-ascii-art-generator/)
+
+L'application web permet de :
+- 📤 **Upload d'images** directement dans le navigateur
+- ⚙️ **Toutes les options** de conversion en temps réel
+- 🎨 **Prévisualisation instantanée**
+- 💾 **Téléchargement** des résultats
+- 📱 **Interface responsive** mobile-friendly
+
+**Architecture :**
+- Frontend : GitHub Pages (HTML/CSS/JavaScript)
+- Backend : Render.com (Flask API Python)
+- Communication : API REST avec CORS
+
 ## ✨ Fonctionnalités
 
 ### 🖼️ Conversion d'Images
