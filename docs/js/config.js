@@ -2,8 +2,8 @@
  * Configuration de l'API
  */
 
-// URL de l'API - METTEZ VOTRE URL RENDER ICI !
-const API_URL = 'https://VOTRE-URL-RENDER.onrender.com';  // ← Changez ici !
+// URL de l'API Render
+const API_URL = 'https://customised-ascii-art-generator.onrender.com';
 
 // Export pour utilisation dans d'autres fichiers
 window.API_CONFIG = {
